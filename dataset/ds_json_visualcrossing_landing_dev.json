@@ -1,0 +1,43 @@
+{
+	"name": "ds_json_visualcrossing_landing_dev",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls2_atmos_dev",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"city": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "VisualCrossing"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat(\n    'landing/visualcrossing/',\n    dataset().city,\n    '/year=',formatDateTime(dataset().date, 'yyyy'),\n    '/month=',formatDateTime(dataset().date, 'MM'),\n    '/day=',formatDateTime(dataset().date, 'dd')\n)",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "atmos-landing-dev-001",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}
