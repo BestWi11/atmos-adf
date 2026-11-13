@@ -1,6 +1,85 @@
 {
 	"name": "pl_ingest_visualCrossing_landing_dev",
 	"properties": {
+		"activities": [
+			{
+				"name": "Copy_visual_crossing_to_landing",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_json_crossing_src_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"city": {
+								"value": "@pipeline().parameters.city",
+								"type": "Expression"
+							},
+							"date": {
+								"value": "@pipeline().parameters.date",
+								"type": "Expression"
+							},
+							"apiKey": "L87WZ6FY7FATQM8NG85CMZ5N5"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_json_crossing_src_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"city": {
+								"value": "@pipeline().parameters.city",
+								"type": "Expression"
+							},
+							"date": {
+								"value": "@pipeline().parameters.date",
+								"type": "Expression"
+							},
+							"apiKey": {
+								"value": "@concat('atmos_', pipeline().parameters.city, '_', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '.json')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"city": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "VisualCrossing"
 		},
